@@ -1,0 +1,43 @@
+//序列中是否存在满足某种条件的元素
+
+int binaryserch(int A[], int left, int right, int x){
+	int mid;
+	while (left <= right){
+		if (A[mid] == x) return mid;
+		else if (A[mid] > x)
+			right = mid - 1;
+		else
+			left = mid + 1;
+	}
+	return -1;
+}
+
+
+//二分法拓展——求根号2
+const double eps = le - 5;//精度10的-5次方
+double f(double x){
+	return x*x;
+}
+double calSqurt(){
+	double left = 1, right = 2, mid;//1和2是根号2的上下边界
+	while (right - left > eps){	//确定近似值精度
+		mid = (left + right) / 2;
+		if (f(mid) > 2)
+			right = mid;
+		else
+			left = mid;
+	}
+	return mid;//根号2的近似值
+}
+
+//二次幂（二分幂）
+typedef long long LL;
+LL binaryRow(LL a, LL b, LL m){
+	if (b == 0) return 1;//0次方
+	if (b % 2 == 1) return a*binaryRow(a, b - 1, m) % m;
+	else
+	{
+		LL mul = binaryRow(a, b / 2, m);
+		return mul*mul%m; 	//这步减少了复杂度
+	}
+}
