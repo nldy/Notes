@@ -1,0 +1,85 @@
+牛客网
+
+现给定字符串，问一共可以形成多少个PAT？ 
+
+
+输入描述:
+
+输入只有一行，包含一个字符串，长度不超过105，只包含P、A、T三种字母。
+
+
+
+
+输出描述:
+
+在一行中输出给定字符串中包含多少个PAT。由于结果可能比较大，只输出对1000000007取余数的结果。
+输入
+
+APPAPT
+输出
+
+2
+
+
+思路：统计pat需要pa的数量，统计pa需要p的数量
+#include<cstdio>
+#include<cstring>
+const int maxn=100005;
+const int mod = 1000000007;
+int main(){
+	int len,rt=0,sum=0;
+	char str[maxn];
+	int leftp[maxn] = { 0 };
+
+	gets(str);
+	len = strlen(str);
+	for (int i = 0; i < len; i++)
+	{
+		if (i>0)
+			leftp[i] = leftp[i - 1];
+		if (str[i] == 'P')
+			leftp[i]++;
+	}//可以单个字符输入时就统计，这就不用gets
+	for (int i = len - 1; i >= 0; i--){
+		if (str[i] == 'T')
+			rt++;
+		else if (str[i] == 'A')
+			sum = (sum+leftp[i] * rt)%mod;
+	}
+	printf("%d\n", sum);
+	return 0;
+}
+
+
+
+//错误的
+这个应该是用递归实现统计PAT数量，暴力破解找到一个PAT就加1，没实现
+#include<cstdio>
+#include<cstring>
+char str[100005];
+const int mod = 1000000007;
+int main(){
+	char pat[] = { 'P', 'A', 'T' };
+	int i = 0,j=0,tag=0,back=0,n;
+	int sum = 0;
+	gets(str);
+	n = strlen(str);
+	while (i < n){
+		if (str[i] == pat[j]){
+			if (j == 2){
+				sum++;
+				j = 0;
+				i = back;
+				continue;
+			}
+			if (j == 0)
+				back = i+1;
+			j++;
+		}
+		i++;
+	}
+	printf("%d\n",sum%mod);
+	return 0;
+}
+
+APPAPTAT
