@@ -1,0 +1,74 @@
+题目描述
+Given any positive integer N, you are supposed to find all of its prime factors（质因子）, and write them in the format N = p1^k1 * p2^k2 *...*pm^km.
+
+输入描述:
+Each input file contains one test case which gives a positive integer N in the range of long int.
+
+
+输出描述:
+Factor N in the format N = p1^k1 * p2^k2 *...*pm^km, where pi's are prime factors of N in increasing order, and the exponent ki is the number of pi -- hence when there is only one pi, ki is 1 and must NOT be printed out.
+
+输入例子:
+97532468
+
+输出例子:
+97532468=2^2*11*17*101*1291
+
+
+#include<cstdio>
+#include<math.h>
+const int maxn = 100005;
+int prime[maxn], pnum = 0;
+bool p[maxn] = { 0 };	
+void findprime( ){
+	for (int i = 2; i < maxn; i++){
+		if (p[i] == false){
+			prime[pnum++] = i;
+			if (pnum >= maxn)break;
+			for (int j = i + i; j < maxn; j += i)	
+				p[j] = true;
+		}
+	}
+}
+struct factor{
+	int x, times;
+}fac[10];
+
+int main(){
+	int n,num=0;
+	scanf("%d",&n);
+	findprime();
+	if (n == 1)
+		printf("1=1");
+	else{
+		printf("%d=", n);
+		int sqr = (int)sqrt(1.0*n);
+		for (int i = 0; i < pnum&&prime[i] <= sqr; i++){
+			if (n%prime[i] == 0){
+				fac[num].x = prime[i];
+				fac[num].times = 0;
+				while (n%prime[i] == 0){
+					fac[num].times++;
+					n = n / prime[i];
+				}
+				num++;//不同质数个数，fac数组元素个数
+			}
+			if (n == 1) break;
+		}
+		if (n != 1){
+			fac[num].x = n;//无法除尽，必有大于根号n的质因子
+			fac[num++].times = 1;	//这个num++是先用后加，对应后面for打印时只有fac[0]有数，num应该为1
+		}
+		for (int i = 0; i < num; i++)
+		{
+			if (i > 0)
+				printf("*");
+			printf("%d", fac[i].x);
+			if (fac[i].times > 1){
+				printf("^%d", fac[i].times);
+	}
+
+		}
+	}
+	return 0;
+}

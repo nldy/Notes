@@ -1,0 +1,54 @@
+题目描述
+令Pi表示第i个素数。现任给两个正整数M <= N <= 10000，请输出PM到PN的所有素数。
+
+输入描述:
+输入在一行中给出M和N，其间以空格分隔。
+
+
+输出描述:
+输出从PM到PN的所有素数，每10个数字占1行，其间以空格分隔，但行末不得有多余空格。
+
+输入例子:
+5 27
+
+输出例子:
+11 13 17 19 23 29 31 37 41 43
+
+47 53 59 61 67 71 73 79 83 89
+
+97 101 103
+
+这题直接判断是不是素数就行
+//注意最后一行不满十个，最后一个数后面输出的不能是空格
+#include<cstdio>
+
+const int maxn = 1000005;
+int prime[maxn], pnum = 0;
+bool p[maxn] = { 0 };	
+void findprime(int n){
+	for (int i = 2; i < maxn; i++){
+		if (p[i] == false){
+			prime[pnum++] = i;
+			if (pnum >= n)break;
+			for (int j = i + i; j < maxn; j += i)	
+				p[j] = true;
+		}
+	}
+}
+
+int main(){
+	int m, n;
+	scanf("%d%d", &m, &n);
+	findprime(n);
+	int j = 0;
+	for (int i = m - 1; i < n; i++)
+	{
+		printf("%d", prime[i]);
+		j++;
+		if (j % 10 != 0 && i < n - 1)
+			printf(" "); //这个空格特别注意，在最后一行个数不满10时输出的不能是空格
+		else
+			printf("\n");
+	}
+	return 0;
+}

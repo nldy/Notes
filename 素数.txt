@@ -1,0 +1,26 @@
+//素数表，通过2到sqrt(n)来判断
+const int maxn = 101;
+int prime[maxn], pnum = 0;//prime存放所有素数，pnum是素数个数
+bool p[maxn] = { 0 };	//p[i]==true表示i是素数
+void findprime(){
+	for (int i = 1; i < maxn; i++){
+		if (isprime(i) == true]){
+			prime[pnum++] = i;
+			p[i] = true;
+		}
+	}
+}
+
+
+//筛选法
+const int maxn = 101;
+int prime[maxn], pnum = 0;//prime存放所有素数，pnum是素数个数
+bool p[maxn] = { 0 };	//i是素数,则p为false，默认都是素数
+void findprime(){
+	for (int i = 2; i < maxn; i++){
+		if (p[i] == false){//从2开始就这样弄，不用像前面一样判断，因为后面的已经通过前面的筛选了，比如说4被2筛选，而2设定和本身是素数
+			for (int j = i + i; j < maxn; j += i)	//筛去i的所有倍数，i+i是两倍
+				p[j] = true;
+		}
+	}
+}
