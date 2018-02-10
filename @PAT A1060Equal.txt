@@ -1,0 +1,84 @@
+题目描述
+If a machine can save only 3 significant digits, the float numbers 12300 and 12358.9 are considered equal since they are both saved as 0.123*105 with simple chopping.  Now given the number of significant digits on a machine and two float numbers, you are supposed to tell if they are treated equal in that machine.
+
+输入描述:
+Each input file contains one test case which gives three numbers N, A and B, where N (<100) is the number of significant digits, and A and B are the two float numbers to be compared.  Each float number is non-negative, no greater than 10100, and that its total digit number is less than 100.
+
+
+输出描述:
+For each test case, print in a line "YES" if the two numbers are treated equal, and then the number in the standard form "0.d1...dN*10^k" (d1>0 unless the number is 0); or "NO" if they are not treated equal, and then the two numbers in their standard form.  All the terms must be separated by a space, with no extra space at the end of a line.
+Note: Simple chopping is assumed without rounding.
+
+输入例子:
+3 12300 12358.9
+
+输出例子:
+YES 0.123*10^5
+
+
+没有形成模版处理的过程，每遇到一种情况就写一段处理代码，使代码不够精简，很多只用一次就没用了
+思路：获取科学计数写法本体部分和指数部分
+先用erase去掉第一个为0数字前的东西，这时判断小数点，是就删除，不是继续找小数点删除，同时e++或e--，最后比较精度不够加0
+学习：（1）string的用法，会方便很多
+	（2）数据处理
+
+4 0000 0000.00	yes
+4 00123.5678 0001235  no
+3 0000.000000123 0.0000001230 	yes
+4 00100.00000012 100.00000013 	yes
+5 123.5678 123.5 	YES
+
+
+#include<iostream>
+#include<string>
+//#include<algorithm>
+using namespace std;
+int n;
+string toform(string str, int &e){
+	int i = 0;
+	while (str.length() > 0 && str[0] == '0')	//去掉第一个数字之前的0
+		str.erase(str.begin());
+	if (str[0] == '.'){
+		str.erase(str.begin());
+		while (str.length() > 0 && str[0] == '0')
+		{
+			str.erase(str.begin());;
+			e--;
+		}
+	}
+	else{
+		while (i < str.length() && str[i] != '.'){
+			i++;
+			e++;	//e是指数，跟小数点有关
+		}
+		if (i<str.length())
+		str.erase(str.begin()+i);
+	}
+	if (str.length() == 0)	//去掉前导长度为0代表数字为0
+		e = 0;
+	int num = 0;
+	i = 0;
+	string s;
+	while (num < n){
+		if (i < str.length())
+			s += str[i++]; //这样可以少些一个i++
+		else
+			s += '0';
+		num++;
+	}
+	return s;
+}
+
+int main(){
+	string str1, str2,str3,str4;
+	cin >> n >> str1 >> str2;
+	int len1 = str1.size(),len2=str2.size();
+	int e1=0, e2=0;
+	str3 = toform(str1, e1);
+	str4 = toform(str2, e2);
+	if (str3 == str4&&e1 == e2)
+		cout << "YES 0." << str3 << "*10^" << e1 << endl;
+	else
+		cout << "NO 0." << str3 << "*10^" << e1 << " 0." << str4 << "*10^" << e2 << endl;
+	return 0;
+}
