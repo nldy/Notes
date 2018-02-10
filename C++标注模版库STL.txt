@@ -1,0 +1,171 @@
+都要使用using namspace std;
+vector , set , string , map , queue , stack , pair ,algorithm九个 	
+1.	vector：翻译为向量，是长度根据需要而自动改变的数组
+头文件：#include<vector>
+定义：vector<typename>  name; // vector<int> name;
+数组：vector<vector<int>>  vi;	
+vector<typename>  arryname[size]; //其中一维长度固定，另外一维才是变长
+访问：（1）跟数组一样，下标范围0到vi.size()-1
+vi.push_back(i);//在末尾添加元素
+（2）通过迭代器，类似指针
+vector<int>::iterator it=vi.begin() ;	//通过*it访问vector里的元素
+vi.begin()取vi的首元素地址，it指向这个地址
+printf( “%d”,*(it+i) );
+支持++it和it++
+for(vector<int>::iterator it=vi.begin();it!=vi.end();it++){ 	printf(“%d”,*it); }//不支持it<vi.end
+使用：
+（1）vi.push_back(x);
+（2）vi.pop_back(i); //出一个元素
+（3）vi.size();		//获得元素个数
+（4）vi.clear();	//清空vector中所有元素
+（5）vi.insert( vi.begin()+i , x );	//在任意处插入一个元素
+（6）vi.erase(vi.begin()+i,vi.begin()+j);		//删除一个位置或一段区间的元素
+用处：（1）储存数据（2）用邻接表储存图
+
+2.	set：翻译为集合，内部自动有序且不重复元素的容器
+#include<set>
+set<typename>  st;
+set<typename>  arrayname[size];
+访问：只能通过迭代器（iterator）
+set<int>::iterator it;		//除了vector和string外STL都不支持*(it+i)访问，只能使用枚举
+or(set<int>::iterator it=st.begin();it!=st.end();it++){ 	printf(“%d”,*it); }
+使用：（1）st.insert(x);	 //自动排序和去重
+（2）st.find(x);	//返回对应值为x的迭代器
+（3）st.erase();
+（4）st.size();
+（5）st.clear();
+用途：自动去重并按升序排序
+
+3.	string:一般使用char str[]存放字符串
+#include<string>	//和string.h是不一样的头文件
+内容访问：（1）通过下标
+读入和输出整个字符串只能用cin和cout(空格就可以结束）
+输出也可以用printf	printf(“%s\n”,str.c_str());
+（2）通过迭代器
+使用：（1）加法，将两个string直接拼接起来
+str3=str1+str2;	
+str1+=str2;	//两者输出相同
+（2）比较：可以使用==、!=、<、<=、>、>=比较，规则是字典顺序
+（3）length()返回string长度，就是字符个数.size()与它基本相同
+（4）str.insert( pos ,string );		//在pos位置（下标从0开始）插入字符串
+insert( it , it2 ,it 3)		//串[it2,it3)将插入到it位置上
+（5）str.erase(it);	//删除单个元素  str.erase(str.begin()+4);
+str.erase(first,last);		//删除区间
+（6）str.clear();
+（7）str.substr(pos,len);	//返回从pos号开始，长度为len的字串
+（8）string::npos是一个常数，本身值为-1，但因为是无符号数，也可认为是unsigned_int类型最大值
+（9）str.find(str2);		//当str2是字串时，返回它第一次出现的位置，负责返回string::npos
+str.find(str2,pos);		//从pos号位置开始匹配str2
+（10）str.replace(pos,len,str2);	//从pos开始，长度为len的字串替换为str2
+str.repalce(it1,it2 ,str2);		//str的迭代器[it1,it2)范围内字串替换为str2
+
+4.	map翻译为映射，可以将任何基本类型映射到任何基本类型上
+映射：如arr[0]=25就是将0映射到25
+#include<map>
+map<typename1,typename2>  mp;	//map<string ,int>  map;
+访问：（1）通过下标 	map<char,int>  mp;	mp[‘c’]=20;	mp[‘c’]=30;//输出ma[‘c’]就是30
+（2）通过迭代器
+mp[‘m’]=20;	mp[‘a’]=30;		it=mp.begin();		it->fisrt，it->second; 输出a 40 
+it->first输出当前映射的键，it->second映射值，如m键的值就是30
+注：（1）map会以键从小到大自动排序
+（2）map的键和值是唯一的，若要一个键对应多个值就用multimap
+
+使用：（1）mp.find(key);	//返回key的映射的迭代器
+（2）erase(it/key)：删除单个 it=mp.find(‘b’);	也可以mp.erase( it ); //mp.erase(‘b’);
+删除一个区间my.erase(fisrt.last);
+（3）seze():元素个数
+（4）clear()
+用途：（1）建立字符（串）与整数之间的映射
+（2）判断大整数或其他数据类型是否存在
+（3）字符串和字符串映射
+
+5.	queeu：队列，先进先出
+#include<queue>
+queue<typename>  name;
+用法：（1）q.push(x);
+（2）只能通过q.front() 访问队首元素，q.back()访问队尾元素
+（3）q.pop();	//队首元素出队
+（3）q.empty();（4）q.size();
+用途：广度优先搜索使用
+注：在使用front()和pop()函数前用empty()判断是否为空
+
+6.	priority_queue：优先队列，用堆来实现。队首元素是优先级最高的那个
+#include<queue>
+priority_queue< typename >  name
+只能通过top()函数访问
+用法：（1）push()
+（2）top()	获得队首元素
+（3）pop()	使用前用empty()判断
+（4）empty()
+（5）size()
+优先级设置：（1）priority_queue<int>  q;
+(2)	priority_queue<int,vector<int>,less<int>>  q;
+vector<typename>是来承载底层数据堆的容器
+less<typename>表示数字大的优先级越大,greater<int>表示数字小的优先级越大
+结构体优先级设置
+struct fruit {	string name;	int price;
+friend bool operator < (fruit f1,fruit f2){	return f1.price<f2.price;
+}	//重载小于号，水果价格高的优先级高,若低的高改成f1.price>f2.price
+priotiry_queue<fruit>  q;
+优先队列的函数与sort中cmp函数效果相反
+重载函数写在结构体外，运用第二种写法
+struct cmp{ 
+bool operator() (fruit f1,fruit f2){ 	return f1.price>f2.price; 	 }
+};
+priority_queue<fruit,vector<fruit>,cmp>  q;
+用途：解决一些贪心算法
+
+7.	stack：栈，后进先出
+#include<stack>
+stack<typename>  name;
+只能用top()访问栈顶元素
+使用：（1）push()
+（2）top()
+（3）pop()
+（4）empty()
+（5）size()
+用途：模拟实现一些递归
+
+8.	pair：将两个元素绑在一起合成一个元素，不用定义结构体
+#include<utility>//map内部实现涉及pair，添map头文件是自动添加utility文件
+pair<typename1,typename2>  name;
+定义时初始化：(1) p=pair<string,int>(“ha”,5) 		(2)p=make_pair(“ha”,5)
+pair中只有两个元素，first和second
+使用：可以直接使用==、!=、<、<=、>、>=比较大小，规则先比较first大小，只有first相等时再比较second
+用途：（1）代替二元结构体，节省时间（2）作为map的键值进行插入
+
+9.	algorithm头文件下常用函数
+#include<algorithm>
+（1）max(x,y)		//返回x和y中最大值
+min(x,y)	//返回x和y中最小值
+abs(x)	//返回x绝对值，x必须是整数，浮点类型用math头文件下fabs
+（2）swap(x,y);	//交换x和y的值
+（3）reverse(it，it2);	//在范围内反转
+（4）next_permutation()	给出一个序列在全排列中的下一个序列
+int a[10]={1,2,3};
+do{	printf(“%d%d%\n”,a[0],a[1],a[2]); }while(next_permutation(a,a+3)); 
+输出123的全排列，到达全排列最后一个时返回false，不用while是因为123也需要输出
+（5）fill()		把容器某一段赋相同值，这个值可以是数组类型对应范围中任意值
+fill(a,a+4,111);
+（6）sort函数：排序
+sor(首元素地址（必填）,尾元素地址的下一个地址（必填）,比较函数（非必填）);
+比较函数一般写作cmp函数
+若它不填则默认从小到大排序
+从大到小：
+bool cmp(int a,int b) {
+return a>b;//理解为a>b时，把a放在b前面
+}
+int main(){
+int a[6]={1,2,3,4,5,6};
+sort( a , a+6 , cmp );
+}
+结构体排序
+bool cmp(Student a, Student b){
+	if (a.score != b.score)
+		return a.score > b.score;		//分数从大倒小排序
+	else
+		return strcmp(a.id, b.id) < 0;		//姓名字典小的在前面
+}
+（6）lower_bount(first,last,val)	//用来寻找数组或容器的范围[first,last)范围内第一个值大于等于val的元素的位置
+（7）upper_bound()	//寻找第一个值大于val的元素的位置
+
