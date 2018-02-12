@@ -1,0 +1,59 @@
+The task is really simple: given N exits on a highway which forms a simple cycle, you are supposed to tell the shortest distance between any pair of exits.
+
+输入描述:
+Each input file contains one test case.  For each case, the first line contains an integer N (in [3, 105]), followed by N integer distances D1 D2 ... DN, where Di is the distance between the i-th and the (i+1)-st exits, and DN is between the N-th and the 1st exits.  All the numbers in a line are separated by a space.  The second line gives a positive integer M (<=104), with M lines follow, each contains a pair of exit numbers, provided that the exits are numbered from 1 to N.  It is guaranteed that the total round trip distance is no more than 107.
+
+
+输出描述:
+For each test case, print your results in M lines, each contains the shortest distance between the corresponding given pair of exits.
+
+输入例子:
+5 1 2 4 14 9
+3
+1 3
+2 5
+4 1
+
+输出例子:
+3
+10
+7
+
+
+题意：N条边形成一个圈，求任意两点间的距离（由边长构成）
+思路：这是一个圈，用一个数组记录第一个点到其他点的距离，
+求a,b两点最短距离就是在圈中看顺时针ab段和逆时针ab段两个谁小
+
+使用“列”的时候，需要使用vector的resize方法，否则不能使用[]进行访问的。
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+const int maxn = 100005;
+int cycle[maxn];
+int firstlen[maxn] = { 0 };
+int main(){
+	int n,m,i=1;
+	scanf("%d", &n);
+	int sides = n;
+	while (n--){
+		scanf("%d", &cycle[i]);
+		firstlen[i] += cycle[i]+firstlen[i-1];
+		i++;
+	}
+	scanf("%d",&m);
+	while (m--){
+		int a, b;
+		scanf("%d%d", &a, &b);
+		if (a > b){
+			int t;
+			t = a;
+			a = b;
+			b = t;
+		}
+		int right, left;
+		right = firstlen[b - 1] - firstlen[a - 1];
+		left = firstlen[sides] - firstlen[b - 1]+firstlen[a-1];
+		printf("%d\n", min(right, left));
+	}
+	return 0;
+}

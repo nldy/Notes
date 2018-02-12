@@ -1,0 +1,51 @@
+Given three integers A, B and C in [-263, 263), you are supposed to tell whether A+B > C.
+
+输入描述:
+The first line of the input gives the positive number of test cases, T (<=1000).  Then T test cases follow, each consists of a single line containing three integers A, B and C, separated by single spaces.
+
+
+输出描述:
+For each test case, output in one line "Case #X: true" if A+B>C, or "Case #X: false" otherwise, where X is the case number (starting from 1从1开始).
+
+输入例子:
+3
+1 2 3
+2 3 4
+9223372036854775807 -9223372036854775808 0
+
+输出例子:
+Case #1: false
+Case #2: true
+Case #3: false
+
+
+思路：考虑溢出的情况
+都为正，相加后为负是溢出，肯定比没溢出的C大
+都为负，相加后为正是溢出，肯定比没溢出的C小
+#include<stdio.h>
+int main()
+{
+	int t, cas = 1;
+	scanf("%d", &t);
+	while (t--)
+	{
+		long long int a, b, c;		
+		bool tag;
+		scanf("%lld %lld %lld", &a, &b, &c);
+		long long res =a + b;
+		printf("Case #%d: ", cas++);
+		if (a > 0 && b > 0 && res < 0)
+			tag = true;
+		else if (a < 0 && b < 0 && res >= 0)
+			tag = false;
+		else if (res > c)
+			tag = true;
+		else
+			tag = false;
+		if (tag==true)
+			printf("true\n");
+		else
+			printf("false\n");
+	}
+	return 0;
+}
