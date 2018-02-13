@@ -1,0 +1,114 @@
+本题要求你写个程序把给定的符号打印成沙漏的形状。例如给定17个“*”，要求按下列格式打印
+ 
+ *****
+  ***
+   *
+  ***
+ *****
+ 所谓“沙漏形状”，是指每行输出奇数个符号；各行符号中心对齐；相邻两行符号数差2；符号数先从大到小顺序递减到1，再从小到大顺序递
+ 增；首尾符号数相等。
+ 
+ 给定任意N个符号，不一定能正好组成一个沙漏。要求打印出的沙漏能用掉尽可能多的符号。
+
+输入描述:
+输入在一行给出1个正整数N（<=1000）和一个符号，中间以空格分隔。
+
+
+输出描述:
+首先打印出由给定符号组成的最大的沙漏形状，最后在一行中输出剩下没用掉的符号数。
+
+输入例子:
+19 *
+
+输出例子:
+*****
+
+ ***
+
+ *
+
+ ***
+
+*****
+
+2
+
+思路：尽量发现图形的对应关系会使题变简单
+
+
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+const int maxn = 100;
+int odd[maxn] = { 0 };
+int main()
+{
+	int n=0;
+	int i = 1,j=0,max=0;
+	char ch[3];
+	scanf("%d%s", &n, &ch);
+	while (max <= n){
+		if (i % 2 != 0)
+		{
+			max += i * 2;
+			odd[j] = i;
+			j++;
+		}
+		i++;
+	}
+	if(j>1){
+		max = max - 1 - (odd[j - 1] * 2);
+		int blank = 0;
+		for (int k = j - 1; k > 0; k--)
+		{
+			for (i = 0; i < blank; i++)
+				printf(" ");
+			blank++;
+			for (i = 0; i < odd[k - 1]; i++)
+				printf("%c", ch[0]);
+			printf("\n");
+		}
+		blank = blank - 2;
+		for (int k = 0; k < j - 2; k++)
+		{
+			for (i = 0; i < blank; i++)
+				printf(" ");
+			blank--;
+			for (i = 0; i < odd[k + 1]; i++)
+				printf("%c", ch[0]);
+			printf("\n");
+		}
+		printf("%d\n", n - max);
+	}
+	else
+		printf("%c\n0\n",ch[0]);
+	return 0;
+}
+
+
+*************************************************
+//学习
+#include<stdio.h>
+#include<math.h>
+int main(){
+    int n,m,i,j,t;
+    char sign;
+    scanf("%d %c",&n,&sign);
+    n-=1;
+    m=1;
+    while(n-2*(m+2) >= 0){
+        m +=2;		//m为奇数，到最后是输出最多字符那行的字符数，也是输出的行数
+        n -= 2*m;	//n为剩余字符数
+    }
+    t=m/2;
+    for(i=0;i<m;i++){
+        for(j=0;j<t-fabs(i-t);j++)	//fabs浮点类型取绝对值
+            printf(" ");
+        for(j=0;j<fabs(i-t)*2+1;j++)
+            printf("%c",sign);
+        printf("\n");
+    }
+    printf("%d\n",n);
+     
+    return 0;
+}
