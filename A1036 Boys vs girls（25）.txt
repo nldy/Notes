@@ -1,0 +1,89 @@
+This time you are asked to tell the difference between the lowest grade of all the male students and the highest grade of all the female students.
+
+Input Specification:
+
+Each input file contains one test case. Each case contains a positive integer N, followed by N lines of student information. Each line contains a student's name, gender, ID and grade, separated by a space, where name and ID are strings of no more than 10 characters with no space, gender is either F (female) or M (male), and grade is an integer between 0 and 100. It is guaranteed that all the grades are distinct.
+
+Output Specification:
+
+For each test case, output in 3 lines. The first line gives the name and ID of the female student with the highest grade, and the second line gives that of the male student with the lowest grade. The third line gives the difference gradeF-gradeM. If one such kind of student is missing, output "Absent" in the corresponding line, and output "NA" in the third line instead.
+
+Sample Input 1:
+
+3
+Joe M Math990112 89
+Mike M CS991301 100
+Mary F EE990830 95
+Sample Output 1:
+Mary EE990830
+Joe Math990112
+6
+
+
+Sample Input 2:
+1
+Jean M AA980920 60
+Sample Output 2:
+Absent
+Jean AA980920
+NA
+
+time 22m
+思路：结构体排序，记录男女是否都在
+改进：用结构数组大小为2，一个记录女生最高分，一个记录男生最低分，不断覆盖
+
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+const int maxn = 100010;
+int right = 0;
+struct People{
+	char name[15];
+	char gender;
+	char id[15];
+	int grade;
+}peo[maxn];
+bool cmp(People a, People b){
+	return a.grade > b.grade;
+}
+int main()
+{
+	int n,f=0,m=0;
+	scanf("%d", &n);
+	int k = 0;
+	while (n--){
+		char gen[5];
+		scanf("%s%s%s%d", &peo[k].name,&gen,&peo[k].id,&peo[k].grade);
+		peo[k].gender = gen[0];
+		if (gen[0] == 'M')
+			m++;
+		else
+			f++;
+		k++;
+	}
+	sort(peo, peo + k, cmp);
+	int dif = 0;
+	if (f > 0){
+		int i = 0;
+		while (peo[i].gender == 'M')
+			i++;
+		printf("%s %s\n", peo[i].name, peo[i].id);
+		dif = peo[i].grade;
+	}
+	else
+		printf("Absent\n");
+	if (m > 0){
+		int i = k-1;
+		while (peo[i].gender == 'F')
+			i--;
+		printf("%s %s\n", peo[i].name, peo[i].id);
+		dif = abs(dif - peo[i].grade);
+	}
+	else
+		printf("Absent\n");
+	if (f > 0 && m > 0)
+		printf("%d\n", dif);
+	else
+		printf("NA\n");
+	return 0;
+}

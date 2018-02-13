@@ -1,0 +1,80 @@
+某城镇进行人口普查，得到了全体居民的生日。现请你写个程序，找出镇上最年长和最年轻的人。
+
+
+
+这里确保每个输入的日期都是合法的，但不一定是合理的——假设已知镇上没有超过200岁的老人，而今天是2014年9月6日，所以超过200
+
+岁的生日和未出生的生日都是不合理的，应该被过滤掉。
+
+输入描述:
+输入在第一行给出正整数N，取值在(0, 105]；随后N行，每行给出1个人的姓名（由不超过5个英文字母组成的字符串）、以及
+
+按“yyyy/mm/dd”（即年/月/日）格式给出的生日。题目保证最年长和最年轻的人没有并列。
+
+
+输出描述:
+在一行中顺序输出有效生日的个数、最年长人和最年轻人的姓名，其间以空格分隔。
+
+输入例子:
+5
+John 2001/05/12
+Tom 1814/09/06
+Ann 2121/01/30
+James 1814/09/05
+Steve 1967/11/20
+
+输出例子:
+3 Tom John
+
+思路：把字符串生日转换成数字来比较，在18140906和20140906范围内的数字是有效的
+学习：对于日期格式的在输入是就能得到年月日
+scanf("%s %d/%d/%d",temp.name,&yy,&mm,&dd);
+
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+const int maxn = 100010;
+int right = 0;
+struct People{
+	char name[15];
+	int birthday;
+}peo[maxn];
+bool cmp(People a,People b){
+	return a.birthday < b.birthday;
+}
+void toform(int k,char bir[]){
+	int j = 10000000, birth = 0;
+	for (int i = 0; i < 10; i++){
+		if (bir[i] == '/')
+			i++;
+		int num = bir[i] - '0';
+		birth += num*j;
+		j = j / 10;
+	}
+	if (birth >= 18140906 && birth <= 20140906)
+		right++;
+	peo[k].birthday = birth;
+}
+int main()
+{
+	int n;
+	scanf("%d", &n);
+	int k = 0;
+	while (n--){
+		char birth[15];
+		scanf("%s%s", &peo[k].name, &birth);
+		toform(k,birth);
+		k++;
+	}
+	sort(peo, peo + k, cmp);
+	printf("%d", right);
+	int i = 0;
+	while (peo[i].birthday < 18140906)
+		i++;
+	printf(" %s", peo[i].name);
+	i = k - 1;
+	while (peo[i].birthday > 20140906)
+		i--;
+	printf(" %s", peo[i].name);
+	return 0;
+}
