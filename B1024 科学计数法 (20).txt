@@ -1,0 +1,81 @@
+科学计数法是科学家用来表示很大或很小的数字的一种方便的方法，其满足正则表达式[+-][1-9]"."[0-9]+E[+-][0-9]+，即数字的整数部分
+
+只有1位，小数部分至少有1位，该数字及其指数部分的正负号即使对正数也必定明确给出。
+
+
+
+现以科学计数法的格式给出实数A，请编写程序按普通数字表示法输出A，并保证所有有效位都被保留。
+
+输入描述:
+每个输入包含1个测试用例，即一个以科学计数法表示的实数A。该数字的存储长度不超过9999字节，且其指数的绝对值不超过9999。
+
+
+输出描述:
+对每个测试用例，在一行中按普通数字表示法输出A，并保证所有有效位都被保留，包括末尾的0。
+
+输入例子:
++1.23400E-03
+
+输出例子:
+0.00123400
+
+
+-1.2E+10
+-1200000000
+
+思路：把小数部分和指数部分分别提出来
+注意：如果指数为0的情况
+
+#include<cstdio>
+#include<string.h>
+const int maxn = 10010;
+char num[maxn];
+char out1[maxn], out2[maxn];
+int ton(char x[]){
+	int len = strlen(x);
+	int n=0;
+	for (int i = 0; i < len; i++){
+		while (x[i] == 0)
+			i++;
+		n = n * 10 + (x[i]-'0');
+	}
+	return n;
+}
+int main()
+{
+	scanf("%s", &num);
+	int len = strlen(num);
+	int j = 0,tag=0;
+	char ch1, ch2;
+	ch1 = num[0];
+	for (int i = 1; i < len; i++){
+		if (num[i] >= '0'&&num[i] <= '9'&&tag==0)
+			out1[j++] = num[i];
+		if (tag == 1){
+			out2[j++] = num[i];
+		}
+		if (num[i] == 'E'){
+			tag = 1;
+			j = 0;
+			ch2 = num[i + 1];
+			i++;
+		}
+	}
+	int form = ton(out2);
+	if (ch1 == '-')
+	printf("%c", ch1);
+	if (ch2 == '-')
+	{
+		printf("0.");
+		for(int i = 0; i < form - 1; i++)
+			printf("0");
+		printf("%s\n", out1);
+	}
+	else
+	{
+		printf("%s", out1);
+		for (int i = 0; i < (1+form - strlen(out1));i++)
+			printf("0");
+	}
+	return 0;
+}
