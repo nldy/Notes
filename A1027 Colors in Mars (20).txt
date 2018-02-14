@@ -1,0 +1,30 @@
+People in Mars represent the colors in their computers in a similar way as the Earth people. That is, a color is represented by a 6-digit number, where the first 2 digits are for Red, the middle 2 digits for Green, and the last 2 digits for Blue. The only difference is that they use radix 13 (0-9 and A-C) instead of 16. Now given a color in three decimal numbers (each between 0 and 168), you are supposed to output their Mars RGB values.
+
+Input
+
+Each input file contains one test case which occupies a line containing the three decimal color values.
+
+Output
+
+For each test case you should output the Mars RGB value in the following format: first output "#", then followed by a 6-digit number where all the English characters must be upper-cased（小写）. If a single color is only 1-digit long, you must print a "0" to the left（1位数左边补0）.
+
+Sample Input
+15 43 71
+Sample Output
+#123456
+
+tiem 40m
+思路：因为输入输出只有两位，可以定制转换
+
+#include<cstdio>
+char radix[13] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C' };
+int main()
+{
+	int a,b,c;
+	scanf("%d%d%d", &a,&b,&c);
+	printf("#");
+	printf("%c%c", radix[a / 13], radix[a % 13]);
+	printf("%c%c", radix[b / 13], radix[b % 13]);
+	printf("%c%c", radix[c / 13], radix[c % 13]);
+	return 0;
+}
