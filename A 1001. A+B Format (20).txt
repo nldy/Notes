@@ -1,0 +1,53 @@
+Calculate a + b and output the sum in standard format -- that is, the digits must be separated into groups of three by commas (unless there are less than four digits).
+
+Input
+
+Each input file contains one test case. Each case contains a pair of integers a and b where -1000000 <= a, b <= 1000000. The numbers are separated by a space.
+
+Output
+
+For each test case, you should output the sum of a and b in one line. The sum must be written in the standard format.
+
+Sample Input
+-1000000 9
+Sample Output
+-999,991
+
+time 26m
+注意：0特殊处理
+
+#include<cstdio>
+#include<string.h>
+#include<algorithm>
+using namespace std;
+const int maxn = 20;
+char num[maxn] = { 0 };
+//char radix[13] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'J', 'Q', 'K' };
+void toform(long long x){
+	int i = 0,j=0;
+	while (x != 0){
+		//printf("%d  %c\n",x%10, (x % 10) + '0');
+		num[i++] = (x % 10)+'0';
+		x /= 10;
+		j++;
+		if (j % 3==0 && i>0&&x!=0)
+		{
+			num[i++] = ',';
+			j = 0;
+		}
+	}
+}
+int main()
+{
+	long long a, b,c;
+	scanf("%lld%lld", &a, &b);
+	c = a + b;
+	if (c < 0)
+		printf("-");
+	else if (c == 0)
+		printf("0");
+	toform(abs(c));
+	for (int i = strlen(num)-1; i>=0; i--)
+		printf("%c", num[i]);
+	return 0;
+}
