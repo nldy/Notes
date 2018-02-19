@@ -1,0 +1,111 @@
+小红想买些珠子做一串自己喜欢的珠串。卖珠子的摊主有很多串五颜六色的珠串，但是不肯把任何一串拆散了卖。于是小红要你帮忙判断一
+
+下，某串珠子里是否包含了全部自己想要的珠子？如果是，那么告诉她有多少多余的珠子；如果不是，那么告诉她缺了多少珠子。
+
+
+
+为方便起见，我们用[0-9]、[a-z]、[A-Z]范围内的字符来表示颜色。例如，YrR8RrY是小红想做的珠串；那么ppRYYGrrYBR2258可以买，因为包含了
+
+全部她想要的珠子，还多了8颗不需要的珠子；ppRYYGrrYB225不能买，因为没有黑色珠子，并且少了一颗红色的珠子。
+
+输入描述:
+每个输入包含1个测试用例。每个测试用例分别在2行中先后给出摊主的珠串和小红想做的珠串，两串都不超过1000个珠子。
+
+
+输出描述:
+如果可以买，则在一行中输出“Yes”以及有多少多余的珠子；如果不可以买，则在一行中输出“No”以及缺了多少珠子。其间以1个空格分隔。
+
+输入例子:
+ppRYYGrrYBR2258
+YrR8RrY
+
+输出例子:
+Yes 8
+
+思路：为什么直接在第二个字符串时统计有错
+
+#include<cstdio>
+//#include<algorithm>
+#include<string.h>
+//using namespace std;
+const int maxn = 1010;
+char str1[maxn], str2[maxn];
+int que[128];
+int main()
+{
+	memset(que, 0, sizeof(que));
+	gets(str1);
+	gets(str2);
+	int len1, len2, other = 0;
+	len1 = strlen(str1);
+	len2 = strlen(str2);
+	for (int i = 0; i < len1; i++){
+		que[str1[i]]++;
+	}
+	for (int i = 0; i < len2; i++){
+		int id = str2[i];
+		que[id]--;
+		if (que[id]<0)
+		{
+			other++;
+		}
+	}
+	if (other > 0)
+		printf("No %d\n", other);
+	else
+		printf("Yse %d\n", len1-len2);
+	return 0;
+}
+
+*******************************
+//全部通过
+
+#include<cstdio>
+//#include<algorithm>
+#include<string.h>
+//using namespace std;
+const int maxn = 1010;
+char str1[maxn], str2[maxn];
+int need[256];
+int main()
+{
+	while (scanf("%s%s", &str1, &str2) != EOF){
+		memset(need, 0, sizeof(need));
+		int len1, len2, other = 0;
+		len1 = strlen(str1);
+		len2 = strlen(str2);
+		for (int i = 0; i < len1; i++){
+			need[str1[i]]++;
+		}
+		for (int i = 0; i < len2; i++){
+			need[str2[i]]--;
+		}
+		int r = 0, ne = 0;
+		for (int i = '0'; i <= '9'; ++i)
+		{
+			if (need[i] > 0)
+				r += need[i];
+			else if (need[i] < 0)
+				ne -= need[i];
+		}
+		for (int i = 'a'; i <= 'z'; ++i)
+		{
+			if (need[i] > 0)
+				r += need[i];
+			else if (need[i] < 0)
+				ne -= need[i];
+		}
+		for (int i = 'A'; i <= 'Z'; ++i)
+		{
+			if (need[i] > 0)
+				r += need[i];
+			else if (need[i] < 0)
+				ne -= need[i];
+		}
+		if (ne > 0)
+			printf("No %d\n", ne);
+		else
+			printf("Yes %d\n", r);
+	}
+	return 0;
+}
