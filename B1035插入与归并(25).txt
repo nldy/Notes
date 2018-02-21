@@ -1,0 +1,176 @@
+根据维基百科的定义：
+
+插入排序是迭代算法，逐一获得输入数据，逐步产生有序的输出序列。每步迭代中，算法从输入序列中取出一元素，将之插入有序序列中正确
+
+的位置。如此迭代直到全部元素有序。
+
+
+
+归并排序进行如下迭代操作：首先将原始序列看成N个只包含1个元素的有序子序列，然后每次迭代归并两个相邻的有序子序列，直到最后只剩
+
+下1个有序的序列。
+
+
+
+现给定原始序列和由某排序算法产生的中间序列，请你判断该算法究竟是哪种排序算法？
+
+输入描述:
+输入在第一行给出正整数N (<=100)；随后一行给出原始序列的N个整数；最后一行给出由某排序算法产生的中间序列。这里假设排序的目标序列是升序。数字间以
+
+空格分隔。
+
+
+输出描述:
+首先在第1行中输出“Insertion Sort”表示插入排序、或“Merge Sort”表示归并排序；然后在第2行中输出用该排序算法再迭代一轮的结果序列。题目保证每组测试
+
+的结果是唯一的。数字间以空格分隔，且行末不得有多余空格。
+
+输入例子:
+10
+3 1 2 8 7 5 9 4 6 0
+1 2 3 7 8 5 9 4 6 0
+
+输出例子:
+Insertion Sort
+1 2 3 5 7 8 9 4 6 0
+
+10
+3 1 2 8 7 5 9 4 0 6
+1 3 2 8 5 7 4 9 0 6
+
+
+10
+3 1 2 8 7 5 9 4 6 0
+1 2 3 5 7 8 9 4 6 0
+
+Insertion Sort
+1 2 3 4 5 7 8 9 6 0
+
+
+思路：先判断插入排序，不是的话就是归并排序
+
+#include<cstdio>
+#include<algorithm>
+#include<string.h>
+using namespace std;
+const int maxn = 105;
+int num[maxn],num2[maxn],show[maxn],n;
+bool issame(int x[maxn],int y){
+	for (int i = 1; i <= y; i++){
+		if (x[i] != num2[i])
+			return false;
+	}
+	return true;
+}
+bool insert(){
+	bool same = false;
+	show[1] = num[1];
+	for (int i = 2; i <= n; i++){
+		int temp = num[i], j = i;
+		show[i] = num[i];
+		while (j > 1 && temp < num[j - 1]){
+			num[j] = num[j - 1];
+			j--;
+		}
+		num[j] = temp;
+		if (same){
+			for (int k = 1; k <= n; k++)
+				show[k] = num[k];
+			return true;
+		}
+		else if (issame(num, n)){
+			same = true;
+		}
+	}
+	return false;
+}
+void merge(){
+	bool same = false;
+	for (int step = 2; step / 2 <= n; step *=2){
+		for (int i = 1; i <= n; i += step){
+			sort(show + i, show + min(i + step, n + 1));
+		}
+		if (same){
+			return;
+		}
+		if (issame(show, n))
+			same = true;
+	}
+}
+int main()
+{
+	scanf("%d", &n);
+	for (int i = 1; i <= n; i++){
+		scanf("%d", &num[i]);
+	}
+	for (int i = 1; i <= n; i++){
+		scanf("%d", &num2[i]);
+	}
+	if (insert())
+		printf("Insertion Sort\n");
+	else{
+		merge();
+		printf("Merge Sort\n");
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		if (i > 1)
+			printf(" ");
+		printf("%d", show[i]);
+	}
+	return 0;
+}
+
+//不用真的插入排序做
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int main()
+{
+	int n, index;
+	int a[100], b[100];
+	bool flag = true;
+	cin >> n;
+	for (int i = 0; i < n; i++)
+		cin >> a[i];
+	for (int i = 0; i < n; i++)
+		cin >> b[i];
+	for (int i = 0; i < n - 1; i++)
+	{
+		if (b[i] > b[i + 1])
+		{
+			index = i + 1;  //index是第一个逆序的下一个下标，插入排序在这之后的元素都没排序
+			break;
+		}
+	}
+	for (int i = index; i < n; i++)
+	{
+		if (a[i] != b[i])
+		{
+			flag = false;   //归并排序
+			break;
+		}
+	}
+	if (flag)   //插入排序
+	{
+		cout << "Insertion Sort" << endl;
+		sort(b, b + index + 1);  //将不同处的那个元素从头排序
+	}
+	else
+	{
+		cout << "Merge Sort" << endl;
+		//此时index表示当前归并时一组中的元素个数，下一轮应该是index*2
+		int size = index * 2;
+		for (int i = 0; i < n / size; i++)
+			sort(b + i*size, b + i*size + size); //n/size是排序组数
+	}
+	for (int i = 0; i < n; i++)
+	{
+		cout << b[i];
+		if (i < n - 1)
+			cout << " ";
+	}
+	cout << endl;
+	return 0;
+
+}
