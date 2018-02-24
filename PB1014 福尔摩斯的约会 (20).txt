@@ -1,0 +1,152 @@
+大侦探福尔摩斯接到一张奇怪的字条：“我们约会吧！ 3485djDkxh4hhGE 2984akDfkkkkggEdsb s&hgsfdk d&Hyscvnm”。大侦探很
+
+ 快就明白了，字条上奇怪的乱码实际上就是约会的时间“星期四 14:04”，因为前面两字符串中第1对相同的大写英文字母（大小写有区分）是
+
+ 第4个字母'D'，代表星期四；第2对相同的字符是'E'，那是第5个英文字母，代表一天里的第14个钟头（于是一天的0点到23点由数字0到9、
+
+ 以及大写字母A到N表示）；后面两字符串第1对相同的英文字母's'出现在第4个位置（从0开始计数）上，代表第4分钟。现给定两对字符串，
+
+ 请帮助福尔摩斯解码得到约会的时间。
+
+输入描述:
+输入在4行中分别给出4个非空、不包含空格、且长度不超过60的字符串。
+
+
+输出描述:
+在一行中输出约会的时间，格式为“DAY HH:MM”，其中“DAY”是某星期的3字符缩写，即MON表示星期一，TUE表示星期二，WED表示星期三，THU表示星期
+
+四，FRI表示星期五，SAT表示星期六，SUN表示星期日。题目输入保证每个测试存在唯一解。
+
+输入例子:
+3485djDkxh4hhGE
+2984akDfkkkkggEdsb
+s&hgsfdk
+d&Hyscvnm
+
+输出例子:
+THU 14:04
+
+
+time 35m
+注：第一个相同是A-G
+    第二个相同是A-N、0-9
+    第三个相同是A-Z
+
+#include<cstdio>
+#include<string.h>
+const int maxn = 65;
+char num1[maxn];
+char num2[maxn];
+char day[7][5] = { { "MON" }, { "TUE" }, { "WED" }, { "THU" }, { "FRI" }, { "SAT" }, { "SUN" } };
+
+int main()
+{
+	int out[3] = { 0 }, j = 0;
+	scanf("%s%s", &num1,&num2);
+	int len = strlen(num1);
+	for (int i = 0; i < len; i++){
+		if (num1[i] == num2[i]){
+			if ( num1[i] >= 'A'&&num1[i] <= 'Z'&&j == 0)
+				out[j++] = num1[i] - 'A';
+			else if (num1[i] >= '0'&&num1[i] <= '9'&&j==1)
+			{
+				out[j++] = num1[i] - '0';
+				break;
+			}
+			else if (num1[i] >= 'A'&&num1[i] <= 'Z'&&j==1)
+			{
+				out[j++] = 10 + (num1[i] - 'A');
+			}
+		}
+	}
+	scanf("%s%s", &num1, num2);
+	len = strlen(num1);
+	int k = 0;
+	for (int i = 0; i < len; i++)
+	{
+		if (num1[i] == num2[i] && (num1[i] >= 'A'&&num1[i] <= 'Z' || num1[i] >= 'a'&&num1[i] <= 'z'))
+			break;
+		k++;
+	}
+	out[2] = k;
+	printf("%s %02d:%02d", day[out[0]], out[1], out[2]);
+	return 0;
+}
+
+
+***********************************************************
+//学习
+#include<iostream>
+#include<iomanip>
+using namespace std;
+ 
+int main()
+    {
+    char a[60],b[60],c[60],d[60];
+    cin>>a;
+    cin>>b;
+    cin>>c;
+    cin>>d;
+    string day;
+    int HH;
+    //int i,j;
+    int MM;
+    bool flagday=false;
+    bool flagHH=false;
+     
+    for(int i=0;i<60&&!flagHH;i++)
+        {
+        if(a[i]==b[i])
+            {if(flagday==false)
+            //{if(a[i]>=65&&a[i]<=90)
+             
+            {
+                switch(a[i])
+                    {case 'A': day="MON";flagday=true;break;
+                     case 'B': day="TUE";flagday=true;break;
+                     case 'C': day="WED";flagday=true;break;
+                     case 'D': day="THU";flagday=true;break;
+                     case 'E': day="FRI";flagday=true;break;
+                     case 'F': day="SAT";flagday=true;break;
+                     case 'G': day="SUN";flagday=true;break;}
+            }
+              
+             else
+                 {switch(a[i])                  
+                    {case '0': HH=0;flagHH=true;break;
+                     case '1': HH=1;flagHH=true;break;
+                     case '2': HH=2;flagHH=true;break;
+                     case '3': HH=3;flagHH=true;break;
+                     case '4': HH=4;flagHH=true;break;
+                     case '5': HH=5;flagHH=true;break;
+                     case '6': HH=6;flagHH=true;break;
+                     case '7': HH=7;flagHH=true;break;
+                     case '8': HH=8;flagHH=true;break;
+                     case '9': HH=9;flagHH=true;break;
+                     case 'A': HH=10;flagHH=true;break;
+                     case 'B': HH=11;flagHH=true;break;
+                     case 'C': HH=12;flagHH=true;break;
+                     case 'D': HH=13;flagHH=true;break;
+                     case 'E': HH=14;flagHH=true;break;
+                     case 'F': HH=15;flagHH=true;break;
+                     case 'G': HH=16;flagHH=true;break;
+                     case 'H': HH=17;flagHH=true;break;
+                     case 'I': HH=18;flagHH=true;break;
+                     case 'J': HH=19;flagHH=true;break;
+                     case 'K': HH=20;flagHH=true;break;
+                     case 'L': HH=21;flagHH=true;break;
+                     case 'M': HH=22;flagHH=true;break;
+                     case 'N': HH=23;flagHH=true;break;
+                     }
+                 }
+            }
+        }
+     
+    for(int j=0;j<60;j++)
+        {if((c[j]>=65&&c[j]<=90)||(c[j]>=97&&c[j]<=122))
+            if(c[j]==d[j]) {MM=j;break;}
+        }
+     
+    cout<<day<<" "<<setw(2)<<setfill('0')<<HH<<":"<<setw(2)<<setfill('0')<<MM<<endl;
+    return 0;
+}

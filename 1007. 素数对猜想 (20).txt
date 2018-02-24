@@ -1,0 +1,42 @@
+让我们定义 dn 为：dn = pn+1 - pn，其中 pi 是第i个素数。显然有 d1=1 且对于n>1有 dn 是偶数。“素数对猜想”认为“存在无穷多对相邻且差为2的素数”。
+
+现给定任意正整数N (< 105)，请计算不超过N的满足猜想的素数对的个数。
+
+输入格式：每个测试输入包含1个测试用例，给出正整数N。
+
+输出格式：每个测试用例的输出占一行，不超过N的满足猜想的素数对的个数。
+
+输入样例：
+20
+输出样例：
+4
+
+time 7min
+思路：素数为只能被1和本身整除的数，1不是
+素数对一定为奇数，且相差为2
+
+#include<cstdio>
+#include<string.h>
+#include<algorithm>
+using namespace std;
+//const int maxn = 10005;
+bool isPrime(int n){
+	if (n <= 1)
+		return false;
+	int sqr = (int)sqrt(1.0*n);
+	for (int i = 2; i <= sqr; i++){
+		if (n%i == 0) return false;
+	}
+	return true;
+}
+int main(){
+	int n;
+	scanf("%d", &n);
+	int count = 0;
+	for (int i = 3; i + 2 <= n; i += 2){
+		if (isPrime(i) == true && isPrime(i + 2) == true)
+			count++;
+	}
+	printf("%d\n", count);
+	return 0;
+}
