@@ -1,0 +1,129 @@
+本题要求编写程序，计算2个有理数的和、差、积、商。
+
+输入描述:
+输入在一行中按照“a1/b1 a2/b2”的格式给出两个分数形式的有理数，其中分子和分母全是整型范围内的整数，负号只可能出现在分子前，分
+
+母不为0。
+
+
+输出描述:
+分别在4行中按照“有理数1 运算符 有理数2 = 结果”的格式顺序输出2个有理数的和、差、积、商。注意输出的每个有理数必须是该有理数的
+
+最简形式“k a/b”，其中k是整数部分，a/b是最简分数部分；若为负数，则须加括号；若除法分母为0，则输出“Inf”。题目保证正确的输出中
+
+没有超过整型范围的整数。
+
+输入例子:
+5/3 0/6
+
+输出例子:
+1 2/3 + 0 = 1 2/3
+
+1 2/3 - 0 = 1 2/3
+
+1 2/3 * 0 = 0
+
+1 2/3 / 0 = Inf
+
+time 35m
+思路：分数计算法的模版
+
+#include<cstdio>
+#include<string.h>
+#include<algorithm>
+using namespace std;
+typedef long long ll;
+
+struct Fraction{
+	ll up, down;
+}a,b;
+ll gcd(ll a, ll b){
+	return !b ? a : gcd(b, a%b);
+}
+Fraction reduction(Fraction result){
+	if (result.down < 0)
+	{
+		result.up = -result.up;
+		result.down = -result.down;
+	}
+	if (result.up == 0)
+		result.down = 1;
+	else
+	{
+		int d = gcd(abs(result.up), abs(result.down));
+		result.up /= d;
+		result.down /= d;
+	}
+	return result;
+}
+Fraction add(Fraction a, Fraction b){
+	Fraction result;
+	result.up = a.up*b.down + b.up*a.down;
+	result.down = a.down *b.down;
+	return reduction(result);
+}
+Fraction minu(Fraction a, Fraction b){
+	Fraction result;
+	result.up = a.up*b.down - b.up*a.down;
+	result.down = a.down *b.down;
+	return reduction(result);
+}
+Fraction multi(Fraction a, Fraction b){
+	Fraction result;
+	result.up = a.up*b.up;
+	result.down = a.down *b.down;
+	return reduction(result);
+}
+Fraction divide(Fraction a, Fraction b){
+	Fraction result;
+	result.up = a.up*b.down;
+	result.down = a.down*b.up;
+	return reduction(result);
+}
+void showResult(Fraction r){
+	r = reduction(r);
+	if (r.up<0)
+		printf("(");
+	if (r.down == 1)
+		printf("%lld", r.up);
+	else if (abs(r.up) > r.down){
+		printf("%lld %lld/%lld", r.up / r.down, abs(r.up) % r.down, r.down);
+	}
+	else
+		printf("%lld/%lld", r.up, r.down);
+	if (r.up < 0)
+		printf(")");
+}
+int main(){
+	scanf("%lld/%lld %lld/%lld", &a.up, &a.down, &b.up, &b.down);
+	showResult(a);
+	printf(" + ");
+	showResult(b);
+	printf(" = ");
+	showResult(add(a, b));
+	printf("\n");
+
+	showResult(a);
+	printf(" - ");
+	showResult(b);
+	printf(" = ");
+	showResult(minu(a, b));
+	printf("\n");
+
+	showResult(a);
+	printf(" * ");
+	showResult(b);
+	printf(" = ");
+	showResult(multi(a, b));
+	printf("\n");
+
+	showResult(a);
+	printf(" / ");
+	showResult(b);
+	printf(" = ");
+	if (b.up == 0)
+		printf("Inf");
+	else
+	showResult(divide(a, b));
+	return 0;
+}
