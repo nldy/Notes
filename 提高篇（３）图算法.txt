@@ -1,0 +1,251 @@
+１．图的定义
+分为有向图和无向图
+
+只放边的终点编号，不放权值
+vector<int> Adj[N];
+添加从１号顶点到３号顶点的边
+Adj[1].push.push_back(3);
+要存放权值
+struct Node{
+int v;
+int w；//边权
+Node(int _v,int _w):v(_v),w(_w){}//构造函数
+};
+vector<Node> Adj[N];
+
+２．ＤＦＳ伪代码
+DFS(u){	//访问顶点u
+vis[u]=true;
+for(从u出发能到的所有顶点v）
+if vis[v]==false;
+DFS(V)；//递归访问v
+}
+DFSTrave(G){
+for(G的所有顶点u)
+if vis[u]==false
+DFS(u);
+}
+加入邻接矩阵版
+int n,G[maxv][maxv];//n为顶点数，MAXV为最大顶点数
+bool vis[maxv]={false};
+void DFS(int u,int depth){	
+vis[u]=true;
+//对结点的操作
+for(int v=0;v<n;v++){//对u出发能到达的顶点枚举
+if(vis[v]==false&&G[u][v]!=INF){
+DFS(V,depth+1);
+}
+}
+}
+void DFSTrve(){//遍历图Ｇ
+for(int u=0;u<n;u++){
+if(vis[u]==false){
+DFS(u,1);//视为第一层
+}}}
+邻接表版
+vector<int> Adj[MAXV];
+int n;	
+bool vis[MAXV]={false};
+void DFS(int u,int depth){
+vis[u]=true;
+for(int i=0;i<Adj[u].size();i++){
+int v=Adj[u][i];
+if(vis[v]==false){
+DFS(v,depth+1)
+}
+}
+}
+void DFSTrave(){
+for(int u=0;u<n;u++){
+if(vis[u]==false){
+DFS(u,1);
+}}}
+
+广度优先
+邻接矩阵版
+int n,G[MAXV][MAXV]；
+bool inq[MAXV]={false}//入过队列为true
+void BFS(int u){
+queue<int> q;
+q.push(u);
+inq[u]=true;
+while(!q.empty()){
+int u=q.front();
+q.pop();
+for(int v=0;v<n;v++){
+if(inq[v]==false&&G[u][v]!=INF){
+q.push(v);
+inq[v]=true;
+}
+}
+}}
+void BFSTrave(){
+for(int u=0;u<n;u++){
+if(inq[u]==false){
+BFS(q);
+}
+}
+}
+邻接矩阵版(输出层号)
+void BFS(int s){
+queue<Node> q;
+Node start;//起始顶点
+start.v=s;//起始顶点编号
+start.layer=0;
+q.push(start);
+inq[start.v]=true;
+while(!q.empty()){
+Node topNode=q.front();
+q.pop();
+int u=topNode.v;
+for(int i=0;i<Adj[u].size();i++){
+Node next=Adj[u][i];
+next.layer=topNode.layer+1;
+if(inq[next.v]==false){
+q.push(next);
+inq[next.v]=true;
+}
+}}}
+
+３．最短路径
+Dijkstra算法：解决单源最短路径，对应所有边权都是非负数
+策略：集合Ｓ存放已被访问的顶点，然后执行n次操作
+每次操作是从未访问的点中选取离起点s最近的那个u，然后令u为中介点，优化起点s与所有能从u达到的顶点v之间的距离
+伪代码
+Dijkstra(G,d[],s){
+初始化;
+for(循环n次）{
+u=使d[u]最小的还未被访问的顶点的编号；
+记u已被访问；
+for(从u出发能达到的所有顶点v）{
+if(v未被访问&&以u为中介使s到v的距离更短）{
+优化d[v]；
+}
+}
+}
+邻接表版：时间复杂度为O(V*(V+V))=O(V^2)
+int n,G[maxn][maxn];
+int d[maxn];//起点到各点的最短路径长度
+bool vis[maxv]={false};
+void Dijkstra(int s){
+    fill(d,d+maxv,INF);//将整个数组赋为ＩＮＦ
+    d[s]=0;//到自身距离为０
+    for(int i=0;i<n;i++){
+        int u=-1,MIn=INF;
+        for(int j=0;j<n;j++){
+            if(vis[j]==false&&d[j]<MIN){
+                u=j;
+                MIN=d[j];
+            }
+        }//找不到小于INF的点，证明该点和起点不通
+        if(u==-1)return;
+        vis[u]=true;//标记u已经访问
+        for(int v=0;v<n;v++){
+            if(vis[v]==false&&G[u][v]!=INF&&d[u]+G[u][v]<d[v])
+                d[v]=d[u]+G[u][v];//优化d[v]
+        	}
+}
+}
+邻接表版：
+外层Ｏ（Ｖ）不可避免，但内层使用堆来优化查找，时间复杂度O(VlogV+E)
+BELLMAN-Ford算法：能处理负权边的情况
+图中有负环，且从源点可以到达就会影响最短路径的求解
+用一个数组存放从源点到达各个顶点的最短距离，同时算法返回一个bool值，如果存在从源点可达的负环，函数返回false，否则返回true
+遍历所有的边，用邻接矩阵时间复杂度O(v^3)
+注意要统计最短路径条数的做法：会多次访问曾访问过的顶点，不能像ＤＪ算法，而是遇到一条和已有最短路径相同的路径时，必须重新计算最短路径条数
+计算最短路径树
+struct Node{
+    int v,dis;//v为邻接边的目标顶点，dis为邻接边的边权
+}
+vector<Node> Adj[MAXV];
+int n;
+int d[MAXV];//起点到各点的最短路径长度
+bool Bellman(int s){
+    fill(d,d+MAXV,INF);
+    d[s]=0;
+    for(int i=0;i<n;i++){
+        for(int u=0;u<n;u++){//每轮操作遍历所有的边
+            for(int j=0;j<Adj[u].seize();j++){
+                int v=Adj[u][j].v;
+                int dis=Adj[u][j].dis;//邻接边的边权
+                if(d[u]+dis<d[v]){
+                    d[v]=d[u]+dis;//松弛操作
+                }
+            }
+        }
+    }
+    for(int u=0;u<n;u++){
+        for(int j=0;j<Adj[u].seze();j++){
+            int v=Adj[u][j].v;
+            int dis=Adj[u][j].dis;
+            if(d[u]+dis<d[v]){//仍然可以被松弛
+                return false;//存在负环
+            }
+        }
+    }
+    return true;
+}
+注意：只有当某个顶点的d[u]值改变时，从它的出发的边的邻接点v的d[v]值才可能改变
+针对这个而优化的算法称为ＳＰＦＡ，期望时间复杂度是O(kE)
+
+Floyd（弗洛伊德算法）：解决全源最短路径问题，时间复杂度O(n^3),这限制了顶点数在２００以内
+流程：
+枚举顶点k属于[1,n]
+以顶点k作为中介点，枚举所有顶点对i和j
+如果dis[i][k]+dis[k][j]<dis[i][j]成立
+赋值dis[i][j]=dis[i][k]+dis[k][j]
+适合领接表
+int n,m;//n为顶点数,m为边数
+int dis[maxv][maxv];//dis[i][j]表示顶点i到j的最短距离
+void Floyd(){
+    for(int k0;k<n;k++){
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                if(dis[i][k]!=INF&&dis[i][j]!=INF&&dis[i][k]+dis[k][j]<dis[i][j])
+                    dis[i][j]=dis[i][k]+dis[k][j];
+            }
+        }
+    }
+}
+
+４．最小生成树：稠密图（边多）用prim，稀疏图（边少）用kruskal
+３个性质：（１）是树，因此边数等于顶点数减一，且一定没有环
+（２）对于给定图，其最小生成树不唯一，但边权之和唯一
+（３）无向图上任意一个结点可以生成最小生成树
+与Dijkstra算法是相同思路，只不过数组d[]的含义不同
+伪代码
+Prim(G,d[]){
+初始化；
+for(循环n次）｛
+u=使d[u]最小的还未被访问的顶点坐标
+记u已被访问
+for(从u出发能到达的所有顶点v){
+if(v未被访问&&以u为中介点的最短距离d[v]更优){
+将G[u][v]赋值给v与集合s的最短距离d[v]；
+}
+}}}
+
+kruskal（克鲁斯卡尔算法）:采用贪心策略
+不断选取不同连同块（不成环）加入最小生成树中
+判断在同一个连同块需要边的两端编号
+struct dedge{
+int u,v;//边的两端编号
+int cost;//边权
+}E[MAXE];
+伪代码
+int kruskal(){
+最小生成树边权和为ans、边数num_edge;
+将所有边按边权从小到大排序；
+for(从小到大枚举所有边）{
+if(测试边两个断点在不同连通块中){
+将测试边加入最小生成树中；
+ans+=测试边的边权;
+最小生成树边数num_edge加１
+当边数num_edge等于顶点数减一时结束循环；
+}
+}
+return ans;
+}
+通过并查集判断两个端点是否在同一个集合，且通过合并测试边的两个端点所在集合，就能达到将边加入到最小生成树的效果
+
+

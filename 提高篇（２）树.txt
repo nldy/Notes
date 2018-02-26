@@ -1,0 +1,250 @@
+１．定义与性质
+层次：根节点为第一层
+度：子树棵数
+连通、边数等于顶点减１的结构一定是树
+二叉树：左右子树严格区分，不能随意交换，这是与度为２的树的区别
+struct node{
+typename data;
+int layer;//层次
+node* lchild;
+node* rchild;
+};
+//新结点
+node* newNode(int v){
+node* Node=new node;
+Node->data=v;
+Node->lchild=Node->rchild=NULL;
+return Node;
+}
+
+完全二叉树判断某个结点是否为叶结点：该结点（root）的左结点编号root*2>n
+
+２．遍历
+层次遍历
+void LayerOrder(node *root){
+queue<node*> q;
+root->layer=1;//根结点层号为１（根据题意）
+q.push(root);
+while(!q.empty()){
+node* now=q.front();
+q.pop();
+printf(“%d”,now->data);
+if(now->lchild!=NULL){
+now->lchild->layer=now->layer+1;//当前层号加１
+	q.push(now->lchild);
+}
+if(now->rchild!=NULL){
+now->rchild->layer=new->layer+1;
+	q.push(now->rchild);
+}
+}
+}
+
+根据先序和中序重建二叉树
+设先序序列为pre1、pre2……pren
+中序为in1、in2……inn
+先序中第一个结点pre1为根结点，然后在中序里找到ink==pre1
+此时可知左结点数numLeft=k-1,左子树先序区间[2,k]，中序区间[1,k-1]
+　右子树先序区间[k+1,n],中序[k+1,n]
+接着往左右子树递归构建二叉树
+ 
+node* create(int preL,int preR,int inL,int inR){
+if(preL>preR){
+return NULL;//先序序列长度小于等于０直接返回
+}
+node* root = new node;
+root->data=pre[preL];//新结点数据域为根节点的值
+int k;
+for(k=inL;k<=inR;k++){
+if(in[k]==pre[preL])
+break;//在中序中找到根结点
+}
+int numLeft=k-inL;//左子树结点个数
+//左子树递归
+root->lchild=create(preL+1,preL+numLeft,inL,k-1);
+//右子树递归
+root->rchild=create(preL+numLeft+1,preR,k+1,inR);
+return root;//返回根结点
+}
+
+静态二叉树：结点的左右指针用int型代替
+strct node{
+typename data;
+int lchild;
+int rchild;
+}Node[MAXN];
+int newNode(int v){
+Node[index].data=v;
+Node[index].lchild=-1;	Node[index].rchild=-1;
+return index++;
+}
+
+3.树的遍历
+树的静态写法
+struct node{
+typename data;
+vector child;
+}Node[maxn];
+int newNode(int v){
+Node[index].data=v;
+Node[index].child.clear();
+return index++;
+}
+先根遍历
+void PreOrder(int root){
+printf(“%d”,Node[root].data);
+for(int i=0;i<Node[root].child.size();i++){
+PreOrder(Node[root.child[i]);
+}
+层次遍历
+void LayerOrder(int root){
+queue<int> Q;
+Q.push(root);
+while(!Q.empty()){
+int front = Q.front();//因为是静态数组，数组用下标输出
+printf(“%d ”,Node[front].data);
+Q.pop();
+for(int i=0;i<Node[front].child.size();i++){
+Q.push(Node[front].child[i]);
+}
+}
+}
+
+树的遍历看DFS,BFS
+合法的ＤＦＳ都可以画成树的形式
+广度优先问题转化成树的层次遍历
+
+４．二叉查找树（ＢＳＴ，binary search tree）
+左子树上结点数据域均小于等于根结点
+查找
+void search(node* root,int x){
+if(root==NULL){
+printf(“failed\n”);
+return;
+}
+if(x==root->data){
+printf(“%d\n”,root->data);
+}else if(x<root->data){
+search(root->lchild,x);
+}else if{
+search(root->rchild,x);
+}
+}
+插入：查找失败的地方
+void insert(node*  &root,int x){
+if(root==NULL){
+root=newNode(x);
+return;
+}
+if(x==root->data){
+return;
+}else if(x<root->data){
+insert(root->lchild,x);
+}else if{
+insert(root->rchild,x);
+}
+}
+建立：
+node* Create(int data[],int n){
+node* root=NULL;
+for(int i=0;i<n;i++){
+insert(root,data[i]);
+}
+return root;
+}
+删除：复杂度O(h)，h为树的高度
+二叉树中比结点权值小的最大结点称为该结点的前驱
+　大的最小结点为后继
+需要两个辅助函数找结点的前驱（左子树的最右）和后继（右子树的最左）
+思路：（１）为空直接返回
+　（２）找到a.为叶子结点，直接删除
+b.有左子树，找到前驱替代该结点，并删除原前驱
+c.有右子树，找后继替代删除
+　（３）没找到，左右递归
+void deleteNode(node* &root,int x){
+if(root==NULL) return;
+if(root->data==x){
+if(root->left==NULL&&root->right==NULL)
+root=NULL;
+}else if(root->lchild!=NULL){
+node* pre=findMax(root->lchild);
+root->data=pre->data;
+deleteNode(root->lchild,pre->data);//在左子树中删除结点pre
+}else{
+node* next=findMin(root->rchild);
+root->data=next->data;
+deleteNode(root->rchild,next->data);
+}
+}else if(root->data >x){
+deleteNode(root->lchild,x);
+}else{
+deleteNode(root->rchild,x);
+}
+}
+
+二叉树的性质：对其中序遍历，其结果是有序的
+
+５．平衡二叉树（ＡＶＬ树）
+使树的高度在每次插入后仍能保持O(logn)级别
+插入操作：４中类型
+
+６．堆：一颗完全二叉树,每个结点都不小于（大于）其左右结点
+向下调整:时间复杂度O(logn)
+void downAdjust(int low,int high){
+int i=low,j=i*2;//i为要调整的结点，j为其左孩子
+while(j<=high){
+if(j+1<=high&&heap[j+1]>heap[j]){
+j=j+1;//选择孩子结点大
+}
+if(heap[j]>heap[i]){
+swap(heap[j],heap[i]);
+i=j;
+j+j*2;
+}else{
+break;
+}
+}
+}
+建堆：时间复杂度O(Ｎ)
+void creatHeap(){
+for(int i=n/2;i>=1;i--){
+downAdjust(i,n);
+}
+}
+删除：用最后一个覆盖堆顶元素
+void deleteTop(){
+heap[1]=heap[n--];
+downAdjust(1,n);
+}
+添加元素：放在最后，然后向上调整
+void upAdjust(int low,int high){
+int i=high,j=i/2;
+while(j>=low){
+if(heap[j]<heap[i]){
+swap(heap[j],heap[i]);
+i=j;
+j=i/2;
+}else{
+break;
+}
+}
+}
+void insert(int x){
+heap[++n]=x;
+upAdjust(1,n);
+}
+
+堆排序：每次取栈顶元素后，对堆进行一次调整
+void heapSort(){
+createHeap();
+for(int i=n;i>1;i--){//把堆顶元素取出放在数组后面，不断减小堆大小，直到剩一个
+swap(heap[i],,heap[1]);
+downAdjust(1,i-1);
+}
+}
+
+７．哈夫曼树
+树的带权路径长度（ＷＰＬ）：等于它所有叶子结点的带权路径长度之和
+对同一结点不唯一，但最小带权路径长度是唯一的
+哈弗曼编码：任何一个字符的编码都不是另一个字符编码的前缀
+

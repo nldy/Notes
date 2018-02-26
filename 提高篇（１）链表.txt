@@ -1,0 +1,148 @@
+数据结构
+１．栈的应用
+常见操作：（１）清空clear，top=-1
+ （２）获取栈内个数size，数组下标从０开始，个数＝top+1
+ （３）判空empty,top=-1
+ （４）进栈push
+ （５）出栈pop
+ （６）取栈顶元素top
+注：STL中的stack实现栈的常用操作，但没有实现栈的清空，可以用一个while循环反复pop实现，如while(!st.empty()){	st.pop(); }
+更常用的是重新定义一个栈，时间复杂度为Ｏ(1)
+
+２．队列
+常见操作
+清空，front=-1、rear=-1
+取个数，rear-front
+判空，front==rear
+入队，push	q[++rear]=x
+出队，pop	front++
+取队首元素，get_front	return q[front+1]
+取队尾元素，get_rear	return q[rear]
+
+3.链表
+struct node{
+typename data;
+node* next;
+};
+为链表节点分配空间
+malloc函数在stdlib.h头文件中，返回类型是申请同变量类型指针
+typename* p = (typename*)malloc(sizeof(typename));
+写法逻辑：以要申请的空间大小为参数，这样函数就会申请一块空间，并且返回执行这块空间的指针，但这个指针是未确定类型的，所以要强制转换
+new运算符是Ｃ＋＋中的，返回类型是申请同变量类型指针,只要new+类型名
+node* p = new node;
+注：使用后必须将其空间释放
+free对应malloc函数	free(p);
+delete对应new运算符	delete(p);
+
+创建链表
+node* create(int arr[]){
+node *p,*pre,*head;//pre为当前节点的前驱节点，head为头结点
+head=new node;
+head->next=NULL;//头结点不需要数据域
+pre=head;
+for(int i=0;i<strlen(arr);i++){
+p=new node;
+p->data = arr[i];
+p->next = NULL;
+pre->next=p;
+pre=p;//将pre作为下个节点的前驱节点
+}
+return head;
+}
+插入
+void insert(node *head,int pos,int x){
+node* p=head;
+for(int i=0;i<pos-1;i++){
+p=p->next;
+}
+node* q=new node;
+q->data=x;
+q->next=p->next;
+p->next=q;//前一个位置的节点指向新节点
+}
+删除
+node* p=head->next;
+node* pre=head;
+
+静态链表
+struct Node{
+type data;
+int next;
+}node[size];
+
+
+搜索专题
+深度优先ＤＦＳ
+问题：给定一个载重量为m，n个物品，其重量为wi，价值为vi，1<=i<=n，要求:把物品装入背包，并使包内物品价值最大
+分析：每次要对物品进行选择，ＤＦＳ参数必须记录当前处理物理编号index，总重量sumW，当前物品价值sumC。当index增长到n，说明已经把n件物品处理完毕
+void DFS(int  index,int sumW,int sumC){
+if(index==n){
+return;
+}
+DFS(index+1,sumW,sumC);
+if(sumW+w[index]<=V){
+if(sumC+c[index]>ans){
+ans=sumC+c[index];//更新最大价值
+}
+DFS(index+1,sumW+w[index],sumC+c[index]);//选择第index件物品
+}
+}
+通过题目条件限制DFS计算量的方法称作剪枝
+
+BFS
+由队列实现
+void BFS(int s){
+queue<int> q;
+while(!q.empty()){
+取出队首元素top;
+访问队首元素top;
+将队首元素出队;
+将top的下一层节点未曾入队的节点全部入队，并设置为已入队;
+}
+}
+问题：给n*m大小的迷宫，“*”代表不可通过，“.”代表平地，Ｓ为起点，Ｔ为终点。
+当前位置（x,y）（下标从０开始），每次能从上下左右移动，求Ｓ到Ｔ的最少步数。
+const int maxn=100;
+struct node{
+int x,y;
+int step;//步数就是层数
+}S,T,Node;
+
+int n,m;
+char maze[maxn][maxn];//迷宫信息
+bool inq[maxn][maxn]={false};//记录位置是否入过队
+int x[4]={0,0,1,-1};//增量数组，移动一步x,y的变化
+int y[4]={1,-1,0,0};
+bool test(int x,int y){	//检测位置是否有效
+if(x>=n||x<0||y>=m||y<0)	return false;
+if(maze[x][y]==’*’)	return false;
+if(inq[x][y]==true)	return false;//入过队了
+return true;
+}
+int BFS(){
+queue<node> q;
+q.push(S);
+while(!q.empty()){
+node top=q.front();//取出队首元素
+q.pop();
+if(top.x==T.x&&top.y==T.y)	return top.step;
+for(int i=0;i<4;i++){
+int newX=top.x+x[i];
+int newY=top.y+y[i];
+if(test(newX,newY){
+Node.x=newX,Node.y=newY;
+Node.step=top.step+1;
+q.push(Node);
+inq[newX][newY]=true;//入过队
+}
+}
+}
+return -1;//无法达到终点返回－１
+}
+注：BFS中设置inq数组是判断结点是否已入队，而不是结点是否被访问
+元素入队的push操作只是制作了该元素的一个副本入队，就是说对队列元素的修改无法改变原元素，对原元素的修改也无法改变队列中的元素
+解决就是队列中存放的是元素编号而不是元素本身
+
+
+
+
