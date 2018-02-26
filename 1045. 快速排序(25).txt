@@ -1,0 +1,69 @@
+著名的快速排序算法里有一个经典的划分过程：我们通常采用某种方法取一个元素作为主元，通过交换，把比主元小的元素放到它的左边，比主元大的元素放到它的右边。 给定划分后的N个互不相同的正整数的排列，请问有多少个元素可能是划分前选取的主元？
+
+例如给定N = 5, 排列是1、3、2、4、5。则：
+
+1的左边没有元素，右边的元素都比它大，所以它可能是主元；
+尽管3的左边元素都比它小，但是它右边的2它小，所以它不能是主元；
+尽管2的右边元素都比它大，但其左边的3比它大，所以它不能是主元；
+类似原因，4和5都可能是主元。
+因此，有3个元素可能是主元。
+
+输入格式：
+
+输入在第1行中给出一个正整数N（<= 10^5）； 第2行是空格分隔的N个不同的正整数，每个数不超过109。
+
+输出格式：
+
+在第1行中输出有可能是主元的元素个数；在第2行中按递增顺序输出这些元素，其间以1个空格分隔，行末不得有多余空格。
+
+输入样例：
+5
+1 3 2 4 5
+输出样例：
+3
+1 4 5
+
+5
+11 5 2 4 6
+
+思路：大小继承，leftmax[i]记录从左到当前位置最大的数，rightmin[i]记录从右到当前位置最小的数，如果leftmax[i]比当前位置的数小，rightmin[i]比当前位置数大，那么这个数就可能是主元
+注：快排中主元位置不变，利用这个做题要注意特殊情况如3 2 1排序后2位置不变但不是主元
+
+
+#include<cstdio>
+#include<string>
+#include<algorithm>
+using namespace std;
+const int maxn = 100010;
+int num[maxn], leftmax[maxn], rightmin[maxn];
+int ans[maxn];
+int main(){
+	int n;
+	scanf("%d", &n);
+	for (int i = 0; i<n; i++){
+		scanf("%d", &num[i]);
+	}
+	int lm = num[0], rm = num[n - 1];
+	for (int i = 0; i < n; i++){
+		if (lm <= num[i])
+			lm = num[i];
+		leftmax[i] = lm;
+		if (rm >= num[n - i - 1])
+			rm = num[n - i - 1];
+		rightmin[n - i - 1] = rm;
+	}
+	int count = 0;
+	for (int i = 0; i < n; i++){
+		if (leftmax[i] <= num[i] && num[i] <= rightmin[i]){
+			ans[count++] = num[i];
+		}
+	}
+	printf("%d\n", count);
+	for (int i = 0; i < count; i++){
+		if (i > 0)
+			printf(" ");
+		printf("%d", ans[i]);
+	}
+	printf("\n");
+	return 0;
+}

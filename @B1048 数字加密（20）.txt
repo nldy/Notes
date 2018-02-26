@@ -1,0 +1,56 @@
+本题要求实现一种数字加密方法。首先固定一个加密用正整数A，对任一正整数B，将其每1位数字与A的对应位置上的数字进行以下运算：对奇数位，对应位的数字相加后对13取余——这里用J代表10、Q代表11、K代表12；对偶数位，用B的数字减去A的数字，若结果为负数，则再加10。这里令个位为第1位。
+
+输入格式：
+
+输入在一行中依次给出A和B，均为不超过100位的正整数，其间以空格分隔。
+
+输出格式：
+
+在一行中输出加密后的结果。
+
+输入样例：
+1234567 368782971
+输出样例：
+3695Q8118
+
+
+
+time 24m
+注意：B的长度小于A时要将B前端补零后再进行加密，这时B的长度也改变了
+
+
+#include<cstdio>
+#include<string.h>
+#include<algorithm>
+using namespace std;
+const int maxn = 110;
+char a[maxn], b[maxn];
+int main()
+{
+	scanf("%s%s", &a, &b);
+	int len1 = strlen(a), len2 = strlen(b);
+	int len = max(len1, len2);
+	reverse(a, a + len1);
+	reverse(b, b + len2);
+	for (int i = 0; i < len;i++){
+		int numa = i < len1 ? a[i] - '0' : 0;
+		int numb = i < len2 ? b[i] - '0' : 0;
+		if (i % 2 == 0){
+			int n = (numb+numa)%13;
+			if (n == 10)
+				b[i] = 'J';
+			else if (n == 11)b[i] = 'Q';
+			else if (n == 12)b[i] = 'K';
+			else b[i] = n + '0';
+		}
+		else
+		{
+			int n = numb-numa;
+			if (n < 0)n += 10;
+			b[i] = n+'0';
+		}
+	}
+	reverse(b, b+len);//要加密的字符串长度可能改变了
+	puts(b);
+	return 0;
+}

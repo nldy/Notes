@@ -1,0 +1,78 @@
+火星人是以13进制计数的：
+
+地球人的0被火星人称为tret。
+地球人数字1到12的火星文分别为：jan, feb, mar, apr, may, jun, jly, aug, sep, oct, nov, dec。
+火星人将进位以后的12个高位数字分别称为：tam, hel, maa, huh, tou, kes, hei, elo, syy, lok, mer, jou。
+例如地球人的数字“29”翻译成火星文就是“hel mar”；而火星文“elo nov”对应地球数字“115”。为了方便交流，请你编写程序实现地球和火星数字之间的互译。
+
+输入格式：
+
+输入第一行给出一个正整数N（<100），随后N行，每行给出一个[0, 169)区间内的数字 —— 或者是地球文，或者是火星文。
+
+输出格式：
+
+对应输入的每一行，在一行中输出翻译后的另一种语言的数字。
+
+输入样例：
+4
+29
+5
+elo nov
+tam
+输出样例：
+hel mar
+may
+115
+13
+
+
+思路：map的应用
+打表
+注意输入
+
+#include<cstdio>
+#include<string>
+#include<map>
+#include<iostream>
+//#include<algorithm>
+using namespace std;
+//const int maxn = 100010;
+string ge[13] = { "tret","jan", "feb", "mar", "apr", "may", "jun", "jly", "aug", "sep", "oct", "nov", "dec" };
+string shi[13] = {"tret", "tam", "hel", "maa", "huh", "tou", "kes", "hei", "elo", "syy", "lok", "mer", "jou" };
+string numto[170];
+map<string, int>tonum;
+void init(){
+	for (int i = 0; i < 13; i++){
+		numto[i] = ge[i];
+		tonum[ge[i]] = i;
+		numto[i * 13] = shi[i];
+		tonum[shi[i]] = i * 13;
+	}
+	for (int i = 1; i < 13; i++){
+		for (int j = 1; j < 13; j++){
+			string str = shi[i] + " " + ge[j];
+			numto[i * 13 + j] = str;
+			tonum[str] = i * 13 + j;
+		}
+	}
+}
+int main(){
+	init();
+	int n;
+	scanf("%d%*c", &n);//%*c作用时读取输入流中数字后的一个字符，并丢弃，使得后面的输入函数不能读到那个字符
+
+	while(n--){
+		string str;
+		getline(cin, str);
+		if (str[0] >= '0'&&str[0] <= '9'){
+			int num = 0;
+			for (int i = 0; i < str.length(); i++){
+				num = num * 10 + (str[i] - '0');
+			}
+			cout << numto[num] << endl;
+		}
+		else
+			cout << tonum[str] << endl;
+	}
+	return 0;
+}
