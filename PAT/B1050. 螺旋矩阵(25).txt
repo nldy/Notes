@@ -1,0 +1,137 @@
+本题要求将给定的N个正整数按非递增的顺序，填入“螺旋矩阵”。所谓“螺旋矩阵”，是指从左上角第1个格子开始，按顺时针螺旋方向填充。要求矩阵的规模为m行n列，满足条件：m*n等于N；m>=n；且m-n取所有可能值中的最小值。
+
+输入格式：
+
+输入在第1行中给出一个正整数N，第2行给出N个待填充的正整数。所有数字不超过104，相邻数字以空格分隔。
+
+输出格式：
+
+输出螺旋矩阵。每行n个数字，共m行。相邻数字以1个空格分隔，行末不得有多余空格。
+
+输入样例：
+12
+37 76 20 98 76 42 53 95 60 81 58 93
+输出样例：
+98 95 93
+42 37 81
+53 20 76
+58 60 76
+
+
+思路：当N为素数时只有一列输出，m=N,n=1；N是完全二次方数时，m=n=根号N；其他情况是，m大于根号N
+填充矩阵分四种情况看成矩形：
+第一种为填充矩形上面的边，填充n-1个
+第二种为填充矩形右边那条边，填充m-1个
+第三种为填充矩形下面的边，填充n-1个
+第四种为填充矩阵左面的边，填充m-1个
+注意：最后一列的输出情况直接填充m个后就退出循环，此时整个矩形填充完毕
+
+
+
+#include<cstdio>
+#include<string.h>
+#include<algorithm>
+
+using namespace std;
+const int maxn = 10010;
+int que[maxn][maxn];
+int num[maxn],sqr;
+bool cmp(int a, int b){
+	return a > b;
+}
+int gcd(int a, int b){
+	return !b ? a : gcd(b, a%b);
+}
+bool isPrime(int n){
+	if (n <= 1)return false;
+	sqr = (int)sqrt(1.0*n);
+	for (int i = 2; i <= sqr; i++)
+		if (n%i == 0)return false;
+	return true;
+}
+void form(int x,int y,int star,int m,int n){
+	if (m == 1 && n == 1){
+		que[x][x] = num[star];
+	}
+	else{
+		int count = (m - 1) * 2 + (n - 1) * 2;
+		int statu = 1, i = y, j = x,k=star;
+		while(star-k<count){
+			if (statu == 1 ){
+				if (j - x < n - 1){
+					que[i][j++] = num[star++];
+				}
+				else{
+					statu = 2;
+				}
+			}
+			if (statu == 2){
+				if (i - y < m - 1){
+					que[i++][j] = num[star++];
+				}
+				else{
+					if (n == 1){
+						que[i][j] = num[star];
+						break;
+					}
+					statu = 3;
+				}
+			}
+			if (statu == 3){
+				if (j>x)
+				que[i][j--] = num[star++];
+				else
+					statu = 4;
+			}
+			if (statu == 4){
+				if (i>y)
+				que[i--][j] = num[star++];
+				if (i == y)
+					break;
+			}
+		}
+		if (m>2&&n>2)
+		form(x + 1, y + 1, star, m - 2, n - 2);
+		
+	}
+}
+int main()
+{
+	int k;
+	scanf("%d", &k);
+	for (int i = 0; i < k; i++){
+		scanf("%d", &num[i]);
+	}
+	sort(num, num + k, cmp);
+	int m, n;
+	if (isPrime(k)){
+		m = k, n = 1;
+	}
+	else{
+		if (sqr*sqr == k)
+		{
+			m = sqr;
+			n = sqr;
+		}
+		else{
+			m = sqr + 1;
+			n = k / m;
+			while (m*n != k){
+				n = k / m;
+				if (m*n == k)
+					break;
+				m++;
+			}
+		}
+	}
+	form(0, 0, 0, m, n);
+	for (int i = 0; i < m; i++){
+		for (int j = 0; j < n; j++){
+			if (j > 0)
+				printf(" ");
+			printf("%d", que[i][j]);
+		}
+		printf("\n");
+	}
+	return 0;
+}
