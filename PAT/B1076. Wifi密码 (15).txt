@@ -1,0 +1,56 @@
+A-1；B-2；C-3；D-4
+输入格式：
+
+输入第一行给出一个正整数N（<= 100），随后N行，每行按照“编号-答案”的格式给出一道题的4个选项，“T”表示正确选项，“F”表示错误选项。选项间用空格分隔。
+
+输出格式：
+
+在一行中输出wifi密码。
+
+输入样例：
+8
+A-T B-F C-F D-F
+C-T B-F A-F D-F
+A-F D-F C-F B-T
+B-T A-F C-F D-F
+B-F D-T A-F C-F
+A-T C-F B-F D-F
+D-T B-F C-F A-F
+C-T A-F B-F D-F
+输出样例：
+13224143
+
+思路：读入一行，在T前两个就是正确选项，判断后就将数字存入数组，最后打印
+
+#include<cstdio>
+#include<cstring>
+const int maxn = 110;
+int num[maxn];
+int main()
+{
+	int n;
+	scanf("%d", &n);
+	getchar();
+	for (int i = 0; i < n; i++)
+	{
+		char str[20];
+		gets(str);
+		int len = strlen(str);
+		for (int j = 0; j < len; j++){
+			if (str[j] == 'T')
+			{
+				if (str[j - 2] == 'A')
+					num[i] = 1;
+				else if (str[j - 2] == 'B')
+					num[i] = 2;
+				else if (str[j - 2] == 'C')
+					num[i] = 3;
+				else if (str[j - 2] == 'D')
+					num[i] = 4;
+			}
+		}
+	}
+	for (int i = 0; i < n; i++)
+		printf("%d", num[i]);
+	return 0;
+}
