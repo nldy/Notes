@@ -1,0 +1,87 @@
+题目4：数字判断
+编程语言：不限
+
+题目描述： 判断一个字符串是否是一个十进制数字 。
+
+题目要求：
+
+1.不允许使用正则或者框架或者第三方提供的判断数字的方法。需要自行实现判断逻辑
+2.需要支持用科学计数法表示的数字
+示例：
+
+以下字符串是合法的十进制数字：
+0
+123
+1.23
+-123
+1.23E+10
+以下字符串是不合法的十进制数字：
+000
+123abc
+.123
+0.1.2
+
+#include<iostream>
+#include<string>
+using namespace std;
+bool flag = true;
+bool isDecimal(string str){
+	if (str[0] == '-' || str[0] == '+')//跳过符号
+		str.erase(str.begin());
+	int i=0;
+	if (str[0] == '0'){//看有没有前导0，有代表该字符串是不合法的十进制数字
+		while (str[i] == '0')
+			i++;
+		if (i > 1)
+			return false;
+	}
+
+	while (i < str.length() && str[i] >= '0'&&str[i] <= '9'){//小数点左边，如果是合法的十进制数字，i应该到小数点的位置或者走完整个字符串
+		i++;
+	}
+	if (i == 0)//小数点左边没数字，该字符串是不合法的十进制数字
+		return false;
+	if (str[i] == '.')//如果有小数点就到小数点的右边
+		i++;
+
+	while (i < str.length() && str[i] >= '0'&&str[i] <= '9'){ //是合法的十进制数字就会走到小数点右边数字的最后一个的下一个下标
+		i++;
+	}
+	if (i >= str.length() && str[i - 1] >= '0'&&str[i - 1] <= '9')//不是科学计数法的合法的十进制数字走玩字符串，返回真
+		return true;
+	else if (str[i] == 'E'&&str[i - 1] >= '0'&&str[i - 1] <= '9')//代表该字符串可能是科学计数法表示
+	{
+		if (str[i + 1] == '-' || str[i + 1] == '+')//跳过符号
+			i = i + 2;
+		int k = 0;
+		if (str[i] == '0'){//看有没有前导0，有代表是不合法的十进制数字
+			while (str[i] == '0'){
+				i++;
+				k++;
+			}
+			if (k > 1)
+				return false;
+		}
+		while (i < str.length() && str[i] >= '0'&&str[i] <= '9'){//是合法的十进制数字就会走到最后一个字符的下一个下标
+			i++;
+		}
+		if (i >= str.length() && str[i - 1] >= '0'&&str[i - 1] <= '9')//是合法的十进制数字
+			return true;
+		else
+			return false;//是不合法的十进制数字
+	}
+	else
+		return false;//是不合法的十进制数字
+}
+
+int main(){
+	while (1){
+		string str;
+		cin >> str;
+		if (isDecimal(str))
+			cout << "legle" << endl;
+		else
+			cout << "illegle" << endl;
+	}
+	return 0;
+}
