@@ -1,0 +1,84 @@
+1.理论
+数据库的核心和基础：数据模型
+数据模型：对现实世界数据特征的抽象
+	分类：一类概念模型，信息模型，按用户观点建模，用于数据库设计
+		  二类逻辑模型和物理模型
+			逻辑模型：层次、网状、关系、面向对象和对象关系模型
+			物理模型：对数据最底层的抽象，数据在系统内部表示和存取方法
+	构成：数据结构、数据操作、完整性约束
+关系模型：目前最重要一种数据结构
+	逻辑结构：二维表
+	操作：查询、插入、删除、更新数据
+	完整性约束：实体完整性、参照完整性、用户自定义完整性
+
+候选码：能唯一表示一个元组的属性组
+主键：多个候选码选一个
+外键：另一个关系的主键
+
+事务：用户定义的一个数据库操作序列，不可分割，要么全做，要么不做
+四个特性：原子性、一致性、隔离性、持续性
+
+索引：对一列或多列的值排序的一种结构
+代价：1.增加存储空间2.插入和修改数据花更多时间（索引也变）
+
+视图：从一个或几个表到处的表，是一个虚表。数据库中只存放定义
+
+2.SQL语句
+定义基本表
+CREATE TABLE Student
+(Sno CHAR(9) PRIMARY KEY,
+Sname CHAR(20) UNIQUE,
+Sage SMALLINT,
+Ssex CHAR(2)
+);
+
+修改
+ALTER TABLE<表名> [ADD <新列名> <数据类型> 完整性约束]
+				 [DROP <完整性约束>]
+				 [MODIFY COLUMN <列名><数据类型>]
+删除
+DROP TEBLE <表名> [RESTRICT|CASCADE]
+CASCADE把相关的都删除
+
+查询
+%通配符，任意长度
+SELECT * FROM Student WHERE Sname=’Bill’;
+BETWEEN …AND	区间
+IN	集合
+SELECT * FROM Student WHERE Sage IS NULL;	//IS 不能用=替代
+
+ORDER BY 
+ASC（升序）	DESC（降序）
+
+LIMIT：查询之后要显示返回的前几条或者中间的某几行数据
+LIMIT 5,10;	//检索行6-15，从第6个开始，检索10行
+LIMIT 4;	//检索前5个
+
+聚集函数
+count（总数）select count(*) as totalcount from table;
+sum（求和）
+avg（平均）
+max,min
+
+GROUP BY：对一个或多个属性值分组，值相等为一组
+having子句只用在GROUP BY中
+select Sage,count(*) from Student group by Sage having count(*)>1;
+
+连接查询
+自然连接、内连接 =
+左外连接：列出左边表的所有元素
+
+数据操纵
+添加、修改、删除
+插入元组
+INSERT INTO Student(Sno,Sname,Sage)	VALVES(‘ 2014 ’ , ’王明’ , 22);
+
+修改
+UPDATE Student
+SET Sage=20
+WHERE Sno=’2014’;
+
+删除
+DELETE
+FROM table
+WHERE 范围；
